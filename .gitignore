@@ -1,0 +1,21 @@
+# working files - these belong in your unlock working directory, not in git.
+# Device images are large, firmware-specific and not mine to redistribute.
+*.bin
+*.exe
+*.dll
+*.zip
+*.pac
+*.xml
+*.ini
+*.log
+
+# helper binaries (build them from the CVE repo)
+spd_dump
+chsize
+gen_spl-unlock
+gen_spl-unlock-legacy
+gen_fdl1-dl
+
+# misc
+*.bak
+*.orig
