@@ -2,30 +2,17 @@
 #
 # Fix the post-unlock boot hang on the ZTE Blade V40 Vita (P606F02 / UMS9230 / UFS).
 #
-# SYMPTOM
-#   Phone is unlocked, boots past the orange notice, reaches the MyOS boot animation
-#   and stays there forever. No adb, no recovery, no way to power it off cleanly.
+# Symptom: unlocked, boots past the orange notice, then spins on the MyOS boot animation
+# forever. The FBE keys in trustos are sealed to the phone's LOCK STATE, so the old keys can
+# never be derived again and /data can never be mounted.
 #
-# CAUSE
-#   The file-based-encryption keys live in the TEE (trustos) and are sealed to the
-#   phone's LOCK STATE. Unlocking changed that state, so the old keys can never be
-#   derived again and /data can never be mounted.
+# The usual fix -- a wipe BCB in misc ("boot-recovery" + "recovery\n--wipe_data\n") -- does
+# NOT work here. This bootloader ignores it. Verified twice, both writes read back and compared.
+# So: erase metadata (the FBE key blobs) and userdata over BROM.
 #
-# WHAT DOES *NOT* WORK
-#   Writing the usual Android BCB into misc ("boot-recovery" + "recovery\n--wipe_data\n").
-#   This bootloader ignores it. Verified twice: the write lands (read back and compared)
-#   and the phone still hangs. Don't burn hours on it.
-#
-# WHAT WORKS
-#   Erase metadata (16 MB, holds the FBE key blobs) and userdata (112 GB) directly over
-#   BROM, then reset.
-#
-# HOW TO USE
-#   Run it, then hold VOL_UP + VOL_DOWN and keep holding. It arms spd_dump with a
-#   900-second window and re-arms itself, so a dropped catch costs you nothing.
-#   NEVER hold POWER -- that hard-resets the phone and kills the USB link mid-upload.
-#
-#   sudo ./fix-post-unlock-hang.sh
+# Run it, then hold VOL_UP + VOL_DOWN and keep holding. It arms spd_dump with a 900s window and
+# re-arms itself, so a dropped catch costs nothing. NEVER hold POWER -- that hard-resets the
+# phone and kills the USB link mid-upload.
 #
 set -u
 

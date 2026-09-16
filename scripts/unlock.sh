@@ -1,23 +1,21 @@
 #!/usr/bin/env bash
 #
 # Bootloader unlock for the ZTE Blade V40 Vita (P606F02 / UMS9230 / UFS).
-#
-# Linux port of the vendor's unlock_autopatch_9230.bat from the
-# ums9230_universal_unlock_UFS package. Same commands, same order, same addresses.
-#
-# Run ONE step at a time. Re-enter BROM (USB 1782:4d00) before every step and keep
-# VOL_UP + VOL_DOWN held while it runs. NEVER hold POWER -- that hard-resets the
-# phone in the middle of the FDL2 upload and you get "connection closed".
+# Linux port of the vendor's unlock_autopatch_9230.bat from the ums9230_universal_unlock_UFS
+# package. Same commands, same order, same addresses.
 #
 #   1  back up splloader + uboot_b, then erase splloader (+ splloader_bak)
-#   2  prepare the SPL image and the uboot backup locally (no phone involved)
+#   2  prepare the SPL image and the uboot backup locally (no phone)
 #   3  write fdl2-cboot.bin to uboot_b    <-- phone cannot boot Android after this
-#   4  run the unlock (fallback download). Ends in "connection closed" and that works.
+#   4  run the unlock. Ends in "connection closed" and that works.
 #   5  read miscdata back and check the unlock token
 #   6  restore uboot_b + splloader, write the wipe BCB   <-- always finish with this
 #
-# This script operates on the CURRENT directory, so run it from wherever you put
-# spd_dump, chsize, gen_spl-unlock and the UFS package files (or set WORK=/that/dir).
+# One step at a time, re-entering BROM before each, and keep VOL_UP + VOL_DOWN held while it
+# runs. NEVER hold POWER -- that hard-resets the phone mid-upload and you get "connection closed".
+#
+# Runs against the current directory: put spd_dump, chsize, gen_spl-unlock and the UFS package
+# files there, or set WORK=/that/dir.
 #
 set -u
 

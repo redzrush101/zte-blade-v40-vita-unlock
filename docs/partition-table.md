@@ -2,22 +2,10 @@
 
 Exactly as the device reported it through `spd_dump` while sitting in BROM.
 
-* Storage: **UFS**.
-* `splloader` is index 0 - a fixed 256 KB region holding the SPL, the chip's first-stage
-  bootloader. `spd_dump` prints it in the list but handles it specially, and it's the
-  partition the unlock flow deliberately erases in step 1.
-* The tool reports `Total number of partitions: 67` even though it enumerates 0..67; don't
-  read too much into the count, the list below is what's actually there.
-* Active slot at unlock time: **`_b`**.
-* There is **no `recovery` partition** - this is a VAB device, recovery is the
-  recovery ramdisk inside the `boot` image.
-* `super` is the dynamic-partition container; system / vendor / product live inside
-  it as logical partitions.
-* `userdata` is the rest of the flash, ~110 GiB.
-* `miscdata` holds the bootloader unlock token at offset **8192** (32 B string +
-  16 B hash + 16 B hash == unlocked; all zeros == locked).
-* `metadata` holds the FBE key blobs - erasing it is what fixes the post-unlock
-  boot hang (see the README).
+UFS storage, slot `_b`. `splloader` (index 0) is the 256 KB fixed region the unlock flow erases.
+No `recovery` partition (VAB device — recovery is the `boot` ramdisk). `super` is the
+dynamic-partition container. `miscdata` + 8192 is the unlock token. `metadata` holds the FBE key
+blobs; erasing it is what fixes the post-unlock hang.
 
 | # | partition | size |
 |---:|:---|---:|
