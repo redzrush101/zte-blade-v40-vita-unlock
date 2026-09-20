@@ -1,10 +1,12 @@
 # working files - these belong in your unlock working directory, not in git.
 # Device images are large, firmware-specific and not mine to redistribute.
 *.bin
+*.img
 *.exe
 *.dll
 *.zip
 *.pac
+*.pem
 *.xml
 *.ini
 *.log

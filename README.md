@@ -93,14 +93,17 @@ there for confirmation.
 
 ## Afterwards
 
-VAB device, slot `b`, no `recovery` partition:
+This is a VAB device with no `recovery` partition. Always query the active slot before
+flashing:
 
 ```sh
-fastboot flash boot_b magisk_patched.img
+adb shell getprop ro.boot.slot_suffix
 ```
 
-Brick a boot image and you're back in BROM, which still works. Partition map:
-[docs/partition-table.md](docs/partition-table.md).
+The stock B06 boot image needs its Magisk output re-signed before flashing. The tested Windows
+stock-flash, AVB-signing and recovery procedure is in
+[docs/windows-flash-root.md](docs/windows-flash-root.md). Brick a boot image and BROM still
+works. Partition map: [docs/partition-table.md](docs/partition-table.md).
 
 **Re-locking:** possible (zero the `miscdata` token over BROM) but pointless for security —
 the BootROM bug is permanent, anyone can re-unlock with these same steps.
